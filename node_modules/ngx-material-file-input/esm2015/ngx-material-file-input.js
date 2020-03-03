@@ -1,0 +1,12 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * Generated bundle index. Do not edit.
+ */
+export { NGX_MAT_FILE_INPUT_CONFIG, MaterialFileInputModule, ByteFormatPipe, FileValidator, FileInput } from './index';
+export { FileInputComponent as ɵb } from './lib/file-input/file-input.component';
+export { FileInputConfig as ɵa } from './lib/model/file-input-config.model';
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibmd4LW1hdGVyaWFsLWZpbGUtaW5wdXQuanMiLCJzb3VyY2VSb290Ijoibmc6Ly9uZ3gtbWF0ZXJpYWwtZmlsZS1pbnB1dC8iLCJzb3VyY2VzIjpbIm5neC1tYXRlcmlhbC1maWxlLWlucHV0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFJQSw2R0FBYyxTQUFTLENBQUM7QUFFeEIsT0FBTyxFQUFDLGtCQUFrQixJQUFJLEVBQUUsRUFBQyxNQUFNLHVDQUF1QyxDQUFDO0FBQy9FLE9BQU8sRUFBQyxlQUFlLElBQUksRUFBRSxFQUFDLE1BQU0scUNBQXFDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEdlbmVyYXRlZCBidW5kbGUgaW5kZXguIERvIG5vdCBlZGl0LlxuICovXG5cbmV4cG9ydCAqIGZyb20gJy4vaW5kZXgnO1xuXG5leHBvcnQge0ZpbGVJbnB1dENvbXBvbmVudCBhcyDJtWJ9IGZyb20gJy4vbGliL2ZpbGUtaW5wdXQvZmlsZS1pbnB1dC5jb21wb25lbnQnO1xuZXhwb3J0IHtGaWxlSW5wdXRDb25maWcgYXMgybVhfSBmcm9tICcuL2xpYi9tb2RlbC9maWxlLWlucHV0LWNvbmZpZy5tb2RlbCc7Il19

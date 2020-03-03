@@ -1,0 +1,11 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+export { NGX_MAT_FILE_INPUT_CONFIG } from './lib/model/file-input-config.model';
+export { MaterialFileInputModule } from './lib/material-file-input.module';
+export { ByteFormatPipe } from './lib/pipe/byte-format.pipe';
+export { FileValidator } from './lib/validator/file-validator';
+export { FileInput } from './lib/model/file-input.model';
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290Ijoibmc6Ly9uZ3gtbWF0ZXJpYWwtZmlsZS1pbnB1dC8iLCJzb3VyY2VzIjpbImluZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7QUFBQSxPQUFPLEVBQUUseUJBQXlCLEVBQUUsTUFBTSxxQ0FBcUMsQ0FBQztBQUNoRixPQUFPLEVBQUUsdUJBQXVCLEVBQUUsTUFBTSxrQ0FBa0MsQ0FBQztBQUMzRSxPQUFPLEVBQUUsY0FBYyxFQUFFLE1BQU0sNkJBQTZCLENBQUM7QUFDN0QsT0FBTyxFQUFFLGFBQWEsRUFBRSxNQUFNLGdDQUFnQyxDQUFDO0FBQy9ELE9BQU8sRUFBRSxTQUFTLEVBQUUsTUFBTSw4QkFBOEIsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB7IE5HWF9NQVRfRklMRV9JTlBVVF9DT05GSUcgfSBmcm9tICcuL2xpYi9tb2RlbC9maWxlLWlucHV0LWNvbmZpZy5tb2RlbCc7XG5leHBvcnQgeyBNYXRlcmlhbEZpbGVJbnB1dE1vZHVsZSB9IGZyb20gJy4vbGliL21hdGVyaWFsLWZpbGUtaW5wdXQubW9kdWxlJztcbmV4cG9ydCB7IEJ5dGVGb3JtYXRQaXBlIH0gZnJvbSAnLi9saWIvcGlwZS9ieXRlLWZvcm1hdC5waXBlJztcbmV4cG9ydCB7IEZpbGVWYWxpZGF0b3IgfSBmcm9tICcuL2xpYi92YWxpZGF0b3IvZmlsZS12YWxpZGF0b3InO1xuZXhwb3J0IHsgRmlsZUlucHV0IH0gZnJvbSAnLi9saWIvbW9kZWwvZmlsZS1pbnB1dC5tb2RlbCc7XG4iXX0=
