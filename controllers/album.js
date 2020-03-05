@@ -111,7 +111,7 @@ function uploadImageAlbum(req,res)
         const extend = file_split[1];      
 
         if(extend == "png" || extend == "jpg" || extend == "gif" || extend == "jpeg"){
-            Album.findByIdAndUpdate(albumId,{imagen: file_path}).then(
+            Album.findByIdAndUpdate(albumId,{imagen: file_path},{new:true}).then(
                 albumUpdated=>{
                     !albumUpdated ? res.status(404).send({message:"No se ha podido actualizar el usuario"}) : res.status(200).send({album: albumUpdated})
                 }).catch(

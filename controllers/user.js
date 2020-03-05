@@ -15,6 +15,7 @@ function saveUser(req,res)
 {
     const user = User();
     const params =req.body;    
+    console.log(params);
     if(params.password != '' && params.email != '' && params.name != '')
     {        
         User.findOne({email: params.email.toLowerCase()}, (err, usersearch)=>{

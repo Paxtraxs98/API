@@ -80,38 +80,46 @@ function deleteArtist(req,res)
                 res.status(404).send({message:"Error al eliminar artista"});
             }
             else
-            {                
-                Album.find({artist:deleteArtist._id}).remove((err,albumDelete)=>{
+            {                         
+                Album.find({artist:deleteArtist._id}).exec((err,albums)=>{
                     if(err)
                     {
                         res.status(500).send({message:"Error en el servidor"});
                     }
                     else
-                    {
-                        console.log();
-                        if(!albumDelete)
+                    {                         
+                        if(!albums)
                         {
                             res.status(404).send({message:"Error al eliminar album"});
                         }
                         else
-                        {                            
-                            Song.find({album:albumDelete._id}).remove((err,songDelete)=>{
-                                if(err)
-                                {
-                                    res.status(500).send({message:"Error en el servidor"});
-                                }
-                                else
-                                {
-                                    if(!songDelete)
+                        {                                         
+                           for (const i in albums) 
+                           {                            
+                                Song.find({album:albums[i]._id}).remove((err,songDelete)=>{
+                                    if(err)
                                     {
-                                        res.status(404).send({message:"Error al eliminar cancion"});
+                                        res.status(500).send({message:"Error en el servidor"});
                                     }
                                     else
-                                    {                                        
-                                        res.status(200).send({message:"Artista Eliminado",deleteArtist});
+                                    {                                                   
+                                        if(!songDelete)
+                                        {
+                                            res.status(404).send({message:"Error al eliminar cancion"});
+                                        }
+                                        else
+                                        {                                        
+                                            Album.findByIdAndRemove(albums[i]._id,(err,albumDelete)=>{
+                                                if(err)
+                                                {
+                                                    res.status(500).send({message:"Error en el servidor"});
+                                                }                                                
+                                            })
+                                        }
                                     }
-                                }
-                            })                                                           
+                                })   
+                            }                                               
+                            res.status(200).send({message:"Artista Eliminado",deleteArtist});         
                         }
                     }
                 })
@@ -130,7 +138,7 @@ function uploadImage(req,res)
         const extencion=file_split[1];                
         if(extencion == "png" || extencion == "jpg" || extencion == "gif" || extencion == "jpge")
         {            
-            Artist.findByIdAndUpdate(artistId,{imagen:file_path}).then(
+            Artist.findByIdAndUpdate(artistId,{imagen:file_path},{new:true}).then(
                 artistUpdate=>{
                     !artistUpdate ? res.status(400).send({message:"No se puede modificar la imagen"}) : res.status(200).send({message:"Imagen de Artista cambiada",imagen:file_path})
                 }).catch(

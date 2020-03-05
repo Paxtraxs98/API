@@ -20,6 +20,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.8.7",
     "mongoose-pagination": "^1.0.0",
-    "ngx-material-file-input": "^0.3.0"
+    "ngx-material-file-input": "^0.3.0",
+    "swagger-ui-express": "^4.1.3"
   }
 }

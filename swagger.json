@@ -1,0 +1,173 @@
+{
+    "openapi":"3.0.0",
+    "info":{
+        "version":"1.0.0",
+        "title":"Musify",
+        "Description":"Documentacion API Musify",
+        "licence":{
+            "name": "MIT"            
+        }
+    },
+    "servers":[{
+        "url":"http://localhost:3977/api/",
+        "description": "Servidor Musify"
+    }],
+    "tags":[{
+        "name":"User",
+        "description":"CRUD de usuarios"
+    },{
+        "name":"Artistas",
+        "description":"CRUD de artistas"
+    },{
+        "name":"Albums",
+        "description":"CRUD de albums"
+    },{
+        "name":"Canciones",
+        "description":"CRUD de canciones"
+    },{
+        "name":"Favoritos",
+        "description":"CRUD de favoritos"
+    },{
+        "name":"Genero",
+        "description":"CRUD de genero"
+    },{
+        "name":"PlayList",
+        "description":"CRUD de playList"
+    }],    
+    "components":{
+        "securitySchemes":{
+            "ApiKeyAuth":{
+                "type":"apiKey",
+                "in":"header",
+                "name":"Authorization"
+            }
+        }
+    },
+    "paths":{
+        "/saveUser":{
+            "post":{
+                "tags":[
+                    "User"
+                ],
+                "summary": "Registro de usuarios",
+                "description": "Requiere parametros por el body para poder hacer el registro",
+                "produces":"application/json",
+                "requestBody":{
+                    "description":"Ingresar datos",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Usuario"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Usuario registrado"
+                    }
+                }
+            }
+        },
+        "/login":{
+            "post":{
+                "tags":[
+                    "User"
+                ],
+                "summary": "Login de usuarios",
+                "description": "Requiere parametros por el body para poder hacer el logueo y regresa un token para futuras peticiones" ,
+                "produces":"application/json",
+                "requestBody":{
+                    "description":"Ingresar datos para el logueo",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Login"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"token generado"
+                    }
+                }
+            }
+        },
+        "/updateUser/{id}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "User"
+                ],
+                "summary": "Modificacion de los datos del usuario",
+                "description": "Requiere parametros por el body para poder hacer Las modificaciones y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"id",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Usuario"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modificacion exitosa"
+                    }
+                }
+            }
+        }
+    },    
+    "definitions":{
+        "Usuario":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string",
+                    "example":"Juan"
+                },
+                "email":{
+                    "type":"string",
+                    "example":"Juan@gmail.com"
+                },
+                "password":{
+                    "type":"string",
+                    "example":"1234"
+                }
+            }
+        },
+        "Login":{
+            "type":"object",
+            "properties":{                
+                "email":{
+                    "type":"string",
+                    "example":"Juan@gmail.com"
+                },
+                "password":{
+                    "type":"string",
+                    "example":"*******"
+                },
+                "gethash":{
+                    "type":"boolean",
+                    "example":"true"
+                }
+            }
+        }
+    }
+
+}

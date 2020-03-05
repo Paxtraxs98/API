@@ -110,6 +110,7 @@ function uploadFile(req,res) {
         if(extend == "mp3" || extend == "ogg" || extend == "mp4"){
             Song.findByIdAndUpdate(songId,{file: file_path},{new:true}).then(
                 songUpdated=>{
+                    console.log(songUpdated);
                     !songUpdated ? res.status(404).send({message:"No se ha podido actualizar la cancion"}) : res.status(200).send({song: songUpdated})
                 }).catch(
                 err=>{

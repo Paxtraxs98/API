@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app =express();
-
+const swaggerUi=require("swagger-ui-express");
+const swaggerDocument=require("./swagger.json");
 //cargar rutas
 const userRouter = require("./router/user");
 const userArtists = require("./router/artist");
@@ -30,5 +31,6 @@ app.use("/api", userSong);
 app.use("/api", favRouter);
 app.use("/api", playlistRouter);
 app.use("/api", GeneroRouter);
+app.use("/swagger",swaggerUi.serve,swaggerUi.setup(swaggerDocument));
 
 module.exports = app;
