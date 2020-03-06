@@ -12,7 +12,8 @@
         "url":"http://localhost:3977/api/",
         "description": "Servidor Musify"
     }],
-    "tags":[{
+    "tags":[
+    {
         "name":"User",
         "description":"CRUD de usuarios"
     },{
@@ -66,6 +67,12 @@
                 "responses":{
                     "200":{
                         "description":"Usuario registrado"
+                    },
+                    "404":{
+                        "description":"Usuariono registrado"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
                     }
                 }
             }
@@ -92,6 +99,12 @@
                 "responses":{
                     "200":{
                         "description":"token generado"
+                    },                    
+                    "404":{
+                        "description":"El Usuario no existe"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
                     }
                 }
             }
@@ -104,7 +117,7 @@
                 "tags":[
                     "User"
                 ],
-                "summary": "Modificacion de los datos del usuario",
+                "summary": "Modificacion de los datos del usuario (nombre y email)",
                 "description": "Requiere parametros por el body para poder hacer Las modificaciones y requiere el token" ,
                 "produces":"application/json",
                 "parameters":[{
@@ -120,7 +133,7 @@
                     "content":{
                         "application/json":{
                             "schema":{
-                                "$ref":"#/definitions/Usuario"
+                                "$ref":"#/definitions/UsuarioUpdate"
                             }
                         }
                     }
@@ -128,12 +141,1153 @@
                 "responses":{
                     "200":{
                         "description":"Modificacion exitosa"
+                    },
+                    "404":{
+                        "description":"Error al modificar"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/updatePassword/{id}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "User"
+                ],
+                "summary": "Modificacion del password del usuario",
+                "description": "Requiere parametros por el body para poder hacer Las modificaciones y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"id",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar password para la modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/PasswordUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modificacion del password exitosa"
+                    },
+                    "404":{
+                        "description":"Error al modificar password"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/saveArtist":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Artistas"
+                ],
+                "summary": "Registro de artistas",
+                "description": "Requiere parametros por el body para poder hacer el insertado deartistas",
+                "produces":"application/json",
+                "requestBody":{
+                    "description":"Ingresar datos",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Artista"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Artista Registrado"
+                    },
+                    "404":{
+                        "description":"Error al registrar Artista"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/updateArtist/{idArtist}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Artistas"
+                ],
+                "summary": "Modificacion de los datos del artista (nombre y genero)",
+                "description": "Requiere parametros por el body para poder hacer Las modificaciones y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idArtist",
+                    "required":true,
+                    "description":"Id del artista",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Artista"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modificacion exitosa"
+                    },
+                    "404":{
+                        "description":"Error al modificar"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteArtist/{idArtist}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Artistas"
+                ],
+                "summary": "Eliminar Artista",
+                "description": "Requiere id del artista y requiere el token para poder eliminar el artista" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idArtist",
+                    "required":true,
+                    "description":"Id del artista",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Artista Eliminado"
+                    },
+                    "404":{
+                        "description":"Error al elimianr"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getArtist/{idArtist}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Artistas"
+                ],
+                "summary": "Muestra datos del Artista Seleccionado",
+                "description": "Requiere el Id para mostrar los datos del artista" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idArtist",
+                    "required":true,
+                    "description":"Id del artista",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Datos del artista"
+                    },
+                    "404":{
+                        "description":"No existe el Artista"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getArtists/{page}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Artistas"
+                ],
+                "summary": "Muestra todos los artistas ",
+                "description": "Requiere el numero de pagina para mostrar los datos del artista" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"page",
+                    "required":false,
+                    "description":" #pagina a mostrar(opcional)",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Todos los artistas"
+                    },
+                    "404":{
+                        "description":"No hay Artistas"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/saveAlbum/{idArtist}":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Albums"
+                ],
+                "summary": "Inserta los albumes en la bd",
+                "description": "Requiere parametros por el body para poder hacer la insercion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idArtist",
+                    "required":true,
+                    "description":"Id del artista",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Insercion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Album"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Album Guardado"
+                    },
+                    "404":{
+                        "description":"Error al guardar Album"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/updateAlbum/{idAlbum}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Albums"
+                ],
+                "summary": "Modifica los datos del album en la bd",
+                "description": "Requiere parametros por el body para poder hacer la modificacion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idAlbum",
+                    "required":true,
+                    "description":"Id del album",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Album"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Album Modificado"
+                    },
+                    "404":{
+                        "description":"No se pudo localizar el album para modificar"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteAlbum/{idAlbum}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Albums"
+                ],
+                "summary": "Elimina el album en la bd",
+                "description": "Requiere el id del album y el token para poder eliminar" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idAlbum",
+                    "required":true,
+                    "description":"Id del album",
+                    "type":"string"
+                }],
+                "responses":{
+                    "200":{
+                        "description":"Album Eliminado"
+                    },
+                    "404":{
+                        "description":"Album no encontrado"
+                    }                    
+                }
+            }
+        },
+        "/getAlbum/{idAlbum}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Albums"
+                ],
+                "summary": "Muestra datos del Album Seleccionado",
+                "description": "Requiere el Id para mostrar los datos del album" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idAlbum",
+                    "required":true,
+                    "description":"Id del album",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Album Seleccionado"
+                    },
+                    "404":{
+                        "description":"Este artista no tiene Albums"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getAlbums/{idArtist}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Albums"
+                ],
+                "summary": "Muestra los Albums",
+                "description": "Requiere el Id del artista para mostrar los albums que tiene" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idArtist",
+                    "required":true,
+                    "description":"Id del artist",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Albums del artista"
+                    },
+                    "404":{
+                        "description":"Este artista no tiene Albums"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/saveSong/{idAlbum}":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Canciones"
+                ],
+                "summary": "Inserta las canciones en la bd",
+                "description": "Requiere parametros por el body para poder hacer la insercion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idAlbum",
+                    "required":true,
+                    "description":"Id del album",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Insercion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Cancion"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Cancion Guardada"
+                    },
+                    "404":{
+                        "description":"No se pudo guardar la cancion"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/updateSong/{idSong}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Canciones"
+                ],
+                "summary": "Modifica los datos de la cancion en la bd",
+                "description": "Requiere parametros por el body para poder hacer la modificacion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Cancion"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modificacion exitosa"
+                    },
+                    "404":{
+                        "description":"No se pudo modificar la cancion"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteSong/{idSong}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Canciones"
+                ],
+                "summary": "Elimina la cancion en la bd",
+                "description": "Requiere el id de la cancion y el token para poder eliminar" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],
+                "responses":{
+                    "200":{
+                        "description":"Cancion eliminada"
+                    },
+                    "404":{
+                        "description":"No se pudo eliminar la cancion"
+                    },               
+                    "500":{
+                        "description":"Error en el servidor"
+                    }  
+                }
+            }
+        },
+        "/getSong/{idSong}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Canciones"
+                ],
+                "summary": "Muestra datos de la Cancion Seleccionado",
+                "description": "Requiere el Id para mostrar los datos de la cancion" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Cancion Seleccionado"
+                    },
+                    "404":{
+                        "description":"No se encuentra esa cancion"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getsongs/{idUser}/{idAlbum}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Canciones"
+                ],
+                "summary": "Muestra las Canciones",
+                "description": "Requiere el Id del usuario y del album ,el id del usuario se solicita para saber si la cancion esta entre las favoritas del usuario y el id del album es opcional por que se pueden llamar todas las canciones o llamar todas las canciones qie tiene ese album.Nota:La caja de texto de album se coloco como obligatoria por que no la enviaba vacia al backend" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },
+                {
+                    "in":"path",
+                    "name":"idAlbum",
+                    "required":true,
+                    "description":"Id del album",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Todas las canciones / Todas las canciones de un album"
+                    },
+                    "404":{
+                        "description":"No hay canciones"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/saveFavo/{idUser}/{idSong}":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Favoritos"
+                ],
+                "summary": "Guardar canciones Favoritas del Usuario",
+                "description": "Requiere parametros por los headers (id del usuario y el id de la cancion) y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },
+                {
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Cancion guardada en Favoritos"
+                    },
+                    "404":{
+                        "description":"No se pudo agregar a Favoritos"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getFavoritos/{idUser}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Favoritos"
+                ],
+                "summary": "Muestra las canciones Favoritas del Usuario",
+                "description": "Requiere parametros por los headers (id del usuario) y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                }
+                ],                
+                "responses":{
+                    "200":{
+                        "description":"Canciones favoritas"
+                    },
+                    "404":{
+                        "description":"No tienes favoritos"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteFav/{idUser}/{idSong}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Favoritos"
+                ],
+                "summary": "Remover canciones Favoritas del Usuario",
+                "description": "Requiere parametros por los headers (id del usuario y el id de la cancion) y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },
+                {
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"se Removio de favoritos"
+                    },
+                    "404":{
+                        "description":"No se pudo Eliminar de Favoritos"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/saveGenero":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Inserta nuevos generos en la bd",
+                "description": "Requiere parametros por el body para poder hacer la insercion y requiere el token" ,
+                "produces":"application/json",                
+                "requestBody":{
+                    "description":"Ingresar datos para la Insercion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Genero"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Genero Guardado"
+                    },
+                    "404":{
+                        "description":"No se pudo guardar genero"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/updateGenero/{idGenero}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Modifica los datos del genero seleccioando en la bd",
+                "description": "Requiere parametros por el body y por el path(idGenero)para poder hacer la modificacion y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idGenero",
+                    "required":true,
+                    "description":"Id del genero",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Genero"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Genero Modificado"
+                    },
+                    "404":{
+                        "description":"No se pudo modificar el genero"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteGenero/{idGenero}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Elimina los datos del genero seleccioando en la bd",
+                "description": "Requiere parametros por el body y por el path(idGenero)para poder eliminar el genero y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idGenero",
+                    "required":true,
+                    "description":"Id del genero",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Genero Eliminado"
+                    },
+                    "404":{
+                        "description":"No se pudo eliminar el genero"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getGenero/{idGenero}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Muestra los datos del genero seleccioando en la bd",
+                "description": "Requiere parametros por  el path(idGenero)para poder mostrar el genero y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idGenero",
+                    "required":true,
+                    "description":"Id del genero",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Genero Seleccionado"
+                    },
+                    "404":{
+                        "description":"No se pudo mostrar el genero"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getGeneros":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Muestra los datos de todos los genero de la bd",
+                "description": "Requiere el token" ,
+                "produces":"application/json",                                  
+                "responses":{
+                    "200":{
+                        "description":"Todos Generos"
+                    },
+                    "404":{
+                        "description":"No hay generos"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getSongsGenero/{idGenero}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "Genero"
+                ],
+                "summary": "Muestra las cacniones que pertencen al genero seleccionado",
+                "description": "Requiere parametros por  el path(idGenero)para poder mostrar las canciones que tiene ese genero y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idGenero",
+                    "required":true,
+                    "description":"Id del genero",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Canciones de ese genero"
+                    },
+                    "404":{
+                        "description":"No Hay canciones disponibles"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/createPlaylist/{idUser}":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Crea una playlist en la bd",
+                "description": "Requiere parametros por el body y path(id del usuario) para poder hacer la insercion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Insercion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Playlist"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"PlayList Creada"
+                    },
+                    "404":{
+                        "description":"No se pudo crear la PlayList"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/addSongPlaylist/{idUser}/{idPlaylist}/{idSong}":{
+            "post":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Guarda canciones en una playlist ya creada en la bd",
+                "description": "Requiere parametros por el path(id del usuario,id de l aplaylist y id de la canciona a guardar) para poder hacer la insercion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },{
+                    "in":"path",
+                    "name":"idPlaylist",
+                    "required":true,
+                    "description":"Id de la playlist",
+                    "type":"string"
+                },{
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Cancion agregada a la PlayList"
+                    },
+                    "404":{
+                        "description":"No se pudo Guardar en la PlayList"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getPlayList/{idUser}/{idPlayList}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Muestra las canciones de la playlist seleccioando en la bd",
+                "description": "Requiere parametros por  el path(idUser y idPlaylist)para poder mostrar el contenido y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },{
+                    "in":"path",
+                    "name":"idPlayList",
+                    "required":true,
+                    "description":"Id de la playlist",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"PlayList vacia / PlayList"
+                    },                    
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/getPlayLists/{idUser}":{
+            "get":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Muestra las playlist del usuario",
+                "description": "Requiere parametros por  el path(idUser para poder mostrar el contenido y requiere el token" ,
+                "produces":"application/json",                
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"No hay PlayLists / PlayLists"
+                    },                    
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/editPlayLists/{idPlaylist}":{
+            "put":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Modificalos datos de la playlist seleccionada en la bd",
+                "description": "Requiere parametros por el body y path(id de la playlist) para poder hacer la modificacion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idPlaylist",
+                    "required":true,
+                    "description":"Id de la playlist",
+                    "type":"string"
+                }],
+                "requestBody":{
+                    "description":"Ingresar datos para la Modificacion",
+                    "required":"true",
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/definitions/Playlist"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"PlayList Modificada"
+                    },
+                    "404":{
+                        "description":"No se pudo modificar el genero"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deletePlayList/{idPlaylist}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Elimina los datos de la playlist seleccionada en la bd",
+                "description": "Requiere parametros por el path(id de la playlist) para poder eliminar la playlist y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idPlaylist",
+                    "required":true,
+                    "description":"Id de la playlist",
+                    "type":"string"
+                }],
+                "responses":{
+                    "200":{
+                        "description":"PlayList Eliminada"
+                    },
+                    "404":{
+                        "description":"PlayList no Eliminada"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
+                    }
+                }
+            }
+        },
+        "/deleteSongPlayList/{idUser}/{idPlaylist}/{idSong}":{
+            "delete":{
+                "security":[{
+                    "ApiKeyAuth":[]
+                }],
+                "tags":[
+                    "PlayList"
+                ],
+                "summary": "Remueve canciones en una playlist ya creada en la bd",
+                "description": "Requiere parametros por el path(id del usuario,id de l aplaylist y id de la canciona a guardar) para poder remover la cancion y requiere el token" ,
+                "produces":"application/json",
+                "parameters":[{
+                    "in":"path",
+                    "name":"idUser",
+                    "required":true,
+                    "description":"Id del usuario",
+                    "type":"string"
+                },{
+                    "in":"path",
+                    "name":"idPlaylist",
+                    "required":true,
+                    "description":"Id de la playlist",
+                    "type":"string"
+                },{
+                    "in":"path",
+                    "name":"idSong",
+                    "required":true,
+                    "description":"Id de la cancion",
+                    "type":"string"
+                }],                
+                "responses":{
+                    "200":{
+                        "description":"Cancion removida de la PlayList"
+                    },
+                    "404":{
+                        "description":"Error al remover la cancion de la lista"
+                    },
+                    "500":{
+                        "description":"Error en el servidor"
                     }
                 }
             }
         }
     },    
-    "definitions":{
+    "definitions":{        
         "Usuario":{
             "type":"object",
             "properties":{
@@ -156,16 +1310,111 @@
             "properties":{                
                 "email":{
                     "type":"string",
-                    "example":"Juan@gmail.com"
+                    "example":"admin@gmail.com"
                 },
                 "password":{
                     "type":"string",
-                    "example":"*******"
+                    "example":"admin"
                 },
                 "gethash":{
                     "type":"boolean",
                     "example":"true"
                 }
+            }
+        },
+        "UsuarioUpdate":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string",
+                    "example":"Juan"
+                },
+                "email":{
+                    "type":"string",
+                    "example":"Juan@gmail.com"
+                }                
+            }
+        },
+        "PasswordUpdate":{
+            "type":"object",
+            "properties":{                
+                "password":{
+                    "type":"string",
+                    "example":"********"
+                }                
+            }
+        },
+        "Artista":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string",
+                    "example":"sarah brightman"
+                },
+                "genero":{
+                    "type":"string",
+                    "example":"Opera"
+                }
+            }
+        },
+        "Album":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string",
+                    "example":"Hijo de la luna"
+                },
+                "description":{
+                    "type":"string",
+                    "example":"descripcion del album"
+                },
+                "ano":{
+                    "type":"string",
+                    "example":"1988"
+                }                
+            }
+        },
+        "Cancion":{
+            "type":"object",
+            "properties":{
+                "number":{
+                    "type":"string",
+                    "example":"90"
+                },
+                "name":{
+                    "type":"string",
+                    "example":"Hijo de la luna"
+                },
+                "duration":{
+                    "type":"string",
+                    "example":"3:00"
+                },
+                "genero":{
+                    "type":"string",
+                    "example":"5e4ff8a45ef4830a10866107"
+                }                
+            }
+        },
+        "Genero":{
+            "type":"object",
+            "properties":{
+                "name":{
+                    "type":"string",
+                    "example":"huapangos"
+                },
+                "description":{
+                    "type":"string",
+                    "example":"descr genero"
+                }                
+            }
+        },
+        "Playlist":{
+            "type":"object",
+            "properties":{
+                "namePlayList":{
+                    "type":"string",
+                    "example":"Perreo del sucio"
+                }                                
             }
         }
     }

@@ -57,7 +57,7 @@ function updateAlbum(req,res)
 {
     const albumId=req.params.id;
     var update=req.body;
-    Album.findByIdAndUpdate(albumId,update).then(
+    Album.findByIdAndUpdate(albumId,update,{new:true}).then(
         albumUpdate=>{
             !albumUpdate ? res.status(404).send({message:"NO se pudo localizar el album para modificar"}) : res.status(200).send({message:"Album Modificado",Album:albumUpdate})
         }).catch(

@@ -30,7 +30,7 @@ function updateGenero(req,res)
 {
     var idGenero=req.params.id;
     var update =req.body;
-    Genero.findByIdAndUpdate(idGenero,update).then(
+    Genero.findByIdAndUpdate(idGenero,update,{new:true}).then(
         generoUpdate=>{
             !generoUpdate ? res.status(404).send({message:"No se pudo modificar el genero"}) : res.status(200).send({message:"Genero Modificado",genero:generoUpdate})
         }).catch(
@@ -70,7 +70,7 @@ function getGenero(req,res)
     var idGenero=req.params.id;
     Genero.findById(idGenero).then(
         genero=>{
-            !genero ? res.status(404).send({message:"No se pudo eliminar el genero"}) : res.status(200).send({genero:genero})
+            !genero ? res.status(404).send({message:"No se pudo mostrar el genero"}) : res.status(200).send({genero:genero})
         }).catch(
         err=>{
             res.status(500).send({message:"Error en el servidor"})
@@ -80,7 +80,7 @@ function getGeneros(req,res)
 {   
     Genero.find({}).sort('name').then(
         generos=>{
-            !generos ? res.status(404).send({message:"No se pudo eliminar el genero"}):res.status(200).send({genero:generos})
+            !generos ? res.status(404).send({message:"No hay generos"}):res.status(200).send({genero:generos})
         }).catch(
         err=>{
             res.status(500).send({message:"Error en el servidor"})

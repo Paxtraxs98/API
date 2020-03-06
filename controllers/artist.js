@@ -49,7 +49,7 @@ function getArtists(req,res)
             res.status(500).send({message:"Error en el Servidor"});
         }
         else{
-            !artists ? res.status(404).send({message:"Error al llamar artistas"}) : res.status(200).send({songs:total,artists:artists})
+            !artists ? res.status(404).send({message:"Error al llamar artistas"}) : res.status(200).send({total:total,artists:artists})
         }
     });
 }
@@ -57,7 +57,7 @@ function updateArtist(req,res)
 {    
     const artistId=req.params.id;
     const artistUpdate=req.body;    
-    Artist.findByIdAndUpdate(artistId,artistUpdate).then(
+    Artist.findByIdAndUpdate(artistId,artistUpdate,{new:true}).then(
         artistUpdate=>{
             !artistUpdate ? res.status(404).send({message:"Error no hay artistas"}) : res.status(200).send({message:"Se modifico el artista"})
         }).catch(

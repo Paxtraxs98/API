@@ -131,7 +131,7 @@ function updateUser(req,res)
     const userId= req.params.id;
     
     const datosUsuarioUpdate =req.body;    
-    User.findByIdAndUpdate(userId,datosUsuarioUpdate).then(
+    User.findByIdAndUpdate(userId,datosUsuarioUpdate,{new:true}).then(
         userUpdate=>{
             !userUpdate ? res.status(404).send({message:"Error no se pudo modificar el usuario"}) : res.status(200).send({userUpdate})
         }).catch(

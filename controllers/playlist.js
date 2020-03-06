@@ -25,8 +25,9 @@ function createPlay(req,res)
 function editPlayLists(req,res)
 {
     var idplayList=req.params.id;
+    console.log(idplayList)
     var update =req.body;  
-    PlayList.findByIdAndUpdate(idplayList,update).then(
+    PlayList.findByIdAndUpdate(idplayList,update,{new:true}).then(
         playListUpdate=>{
             !playListUpdate ? res.status(404).send({message:"No se pudo modificar el genero"}) : res.status(200).send({message:"PlayList Modificada",playlist:playListUpdate})
         }).catch(
@@ -44,7 +45,7 @@ function saveSongPlayList(req,res)
             !saveplay ? res.status(404).send({message:"No se pudo Guardar en la PlayList"}) : res.status(200).send({message:" Cancion agregada a la PlayList",saveplay})
         }).catch(
         err=>{
-            res.status(500).send({message:"Error en el servidors"})
+            res.status(500).send({message:"Error en el servidor"})
         });
 }
 function getPlayList(req,res)
@@ -53,7 +54,7 @@ function getPlayList(req,res)
     const playlistId=req.params.idPlayList;
     PlayList.find({"_id":playlistId,"user":userId}).populate({path: 'playlist',model:'Song'}).then(
         detallPlay=>{
-            !detallPlay ? res.status(200).send({message:"No tienes PlayList"}) : res.status(200).send({message:"PlayList",detallPlay});
+            !detallPlay ? res.status(200).send({message:"PlayList vacia"}) : res.status(200).send({message:"PlayList",detallPlay});
             //si hay un error colocar detalPlay=''
         }).catch(
         err=>{

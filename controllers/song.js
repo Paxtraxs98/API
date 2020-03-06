@@ -47,7 +47,7 @@ function getSongs(req,res)
     const albumId = req.params.album;
     var userId = req.params.idUser;
     var statusSongs=[];
-    var find;
+    var find;   
     !albumId ? find = Song.find({}).sort("number") : find = Song.find({album: albumId}).sort("number")
     find.populate({path: "album",populate: {path: 'artist',model: 'Artist'}}).then(
         songs=>{
@@ -73,14 +73,14 @@ function getSongs(req,res)
                 }
         }).catch(
         err=>{
-            res.status(500).send({message:"Error en la peticion"})
+            res.status(500).send({message:"Error en el servidor"})
         });  
 }
 function updateSong(req,res)
 {
     const songId=req.params.id;
     const update=req.body;    
-    Song.findByIdAndUpdate(songId,update).then(
+    Song.findByIdAndUpdate(songId,update,{new:true}).then(
         updateSong=>{
             !updateSong ? res.status(404).send({message:"No se pudo modificar la cancion"}) : res.status(200).send({message:"Modificacion exitosa",updateSong})
         }).catch(
