@@ -5,7 +5,8 @@ const bcrypt = require("bcrypt-nodejs");
 const User = require("../models/user");
 const Favoritos = require("../models/favorites");
 const jwt = require("../services/jwt");
-
+const sgMail = require('@sendgrid/mail');
+// const SENDGRID_API_KEY='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'
 function pruebas(req,res) {
     res.status(200).send({
         message: "Probando controlador ussuarios"
@@ -14,8 +15,7 @@ function pruebas(req,res) {
 function saveUser(req,res)
 {
     const user = User();
-    const params =req.body;    
-    console.log(params);
+    const params =req.body;        
     if(params.password != '' && params.email != '' && params.name != '')
     {        
         User.findOne({email: params.email.toLowerCase()}, (err, usersearch)=>{
@@ -31,12 +31,14 @@ function saveUser(req,res)
                     user.email=params.email;
                     user.role="ROLE_USER";
                     user.imagen="null";
+                    user.status="0";
                     bcrypt.hash(params.password,null,null,function(err,hash)
                     {
                         user.password=hash;
                         user.save((err,userSave)=>{
                             if(err)
                             {
+                                
                                 res.status(500).send({message:"Error en el servidor"});
                             }
                             else
@@ -46,26 +48,24 @@ function saveUser(req,res)
                                     res.status(404).send({message:"Error al guardar el usuario"});
                                 }
                                 else
-                                {
-                                    let favoritos=new Favoritos();
-                                    favoritos.user=userSave._id;
-                                    favoritos.save((err,savefav)=>{
-                                        if(err)
-                                        {
-                                            res.status(500).send({message:"error 500"});
-                                        }
-                                        else
-                                        {
-                                            if(!savefav)
-                                            {
-                                                res.status(404).send({message:"error 404"});
-                                            }
-                                            else
-                                            {
-                                                res.status(200).send({userSave});
-                                            }
-                                        }
-                                    });
+                                {       
+                                    console.log(userSave);                             
+                                    // var SENDGRID_API_KEY='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'
+                                    sgMail.setApiKey('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');
+                                    const msg = {
+                                    to: userSave.email,
+                                    from: 'pakogonzalezgil@gmail.com',
+                                    subject: 'Confirmacion de cuenta',
+                                    text: 'prueba 1.1 node y sendgrid',
+                                    html:'<div style="background-color: #fff; width: 100%;"><div style="text-align: center;"><h1 style="color:#4e85ae">Bienvenido '+userSave.name+' a Musify</h1></div><div style="width:40%; margin: auto;text-align: center;"><a href="http://localhost:4200/ConfirmAccount/'+userSave._id+'" style="color:white;font-size: 20px;text-decoration: none;"><div style="padding:20px;background:#4e85ae;border-radius: 10px">Confirmar Cuenta</div></a></div></div>'
+                                    // html: '<a href="http://localhost:4200/ConfirmAccount/'+userSave._id+'">Confirmar Cuenta</a>',
+                                    };
+                                    console.log("----------")
+                                    console.log(msg)
+                                    console.log("----------")
+                                    sgMail.send(msg);
+                                    
+                                    res.status(200).send({message:"Porfavor verifica tu cuenta desde tu email",userSave,token: jwt.createTokenValidation(userSave)});                                     
                                 }
                             }
                         });
@@ -83,6 +83,21 @@ function saveUser(req,res)
     {
         res.status(404).send({message:"faltan datos"});
     }
+}
+function validation(req,res)
+{    
+    const userId=req.user.sub;    
+    var update = {
+        $set:{status: true}
+    }
+    User.findByIdAndUpdate(req.user.sub, update,{new:true}).then(
+        validationCompleted=>{
+            !validationCompleted ? res.status(404).send({message:"Error no se pudo completar la validacion"}) : res.status(200).send({validationCompleted})        
+        }).catch(
+        err=>{
+            res.status(500).send({message:"Error en el servidor"})
+        }
+    );  
 }
 function login(req,res)
 {    
@@ -103,6 +118,11 @@ function login(req,res)
             }
             else
             {
+               if(user.status==false)
+               {
+                res.status(404).send({message:"Cuenta no verificada"});
+               }
+               else{
                 bcrypt.compare(password,user.password,function(err,check){
                     if(check)
                     {                        
@@ -122,6 +142,7 @@ function login(req,res)
                         res.status(404).send({message: "Las contraseñas no son iguales"});
                     }
                 });
+               }
             }
         }
     });
@@ -254,6 +275,7 @@ function getImagenUser(req,res)
 module.exports = {
     pruebas,
     saveUser,
+    validation,
     login,
     updateUser,
     updatePassword,    
