@@ -7,7 +7,8 @@ const UserSchema = Schema({
     password:String,
     role:String,
     imagen:String,
-    status:Boolean
+    status:Boolean,
+    register:String
 });
 
 module.exports = mongoose.model("User",UserSchema);

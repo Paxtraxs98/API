@@ -15,13 +15,14 @@ exports.createToken = function (user) {
   return jwt.encode(payload, secret);
 };
 exports.createTokenValidation = function (user) {
+  console.log(user)
   const payload = {
       sub: user._id,
       name: user.name,      
       email: user.email,
       role: user.role,      
       iat: moment().unix(),
-      exp: moment().add(60, "minute").unix()
+      exp: moment().add(5, "minute").unix()
   };
 
   return jwt.encode(payload, secret2);

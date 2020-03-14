@@ -6,12 +6,11 @@ const User = require("../models/user");
 const Favoritos = require("../models/favorites");
 const jwt = require("../services/jwt");
 const sgMail = require('@sendgrid/mail');
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID="1004572504781-hoodv4n6c9ovubrp8n73qv4faeo00kcj.apps.googleusercontent.com"
+const client = new OAuth2Client(CLIENT_ID);
 // const SENDGRID_API_KEY='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'
-function pruebas(req,res) {
-    res.status(200).send({
-        message: "Probando controlador ussuarios"
-    });
-}
+
 function saveUser(req,res)
 {
     const user = User();
@@ -32,6 +31,7 @@ function saveUser(req,res)
                     user.role="ROLE_USER";
                     user.imagen="null";
                     user.status="0";
+                    user.register='musify'
                     bcrypt.hash(params.password,null,null,function(err,hash)
                     {
                         user.password=hash;
@@ -48,23 +48,9 @@ function saveUser(req,res)
                                     res.status(404).send({message:"Error al guardar el usuario"});
                                 }
                                 else
-                                {       
-                                    console.log(userSave);                             
-                                    // var SENDGRID_API_KEY='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'
-                                    sgMail.setApiKey('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');
-                                    const msg = {
-                                    to: userSave.email,
-                                    from: 'pakogonzalezgil@gmail.com',
-                                    subject: 'Confirmacion de cuenta',
-                                    text: 'prueba 1.1 node y sendgrid',
-                                    html:'<div style="background-color: #fff; width: 100%;"><div style="text-align: center;"><h1 style="color:#4e85ae">Bienvenido '+userSave.name+' a Musify</h1></div><div style="width:40%; margin: auto;text-align: center;"><a href="http://localhost:4200/ConfirmAccount/'+userSave._id+'" style="color:white;font-size: 20px;text-decoration: none;"><div style="padding:20px;background:#4e85ae;border-radius: 10px">Confirmar Cuenta</div></a></div></div>'
-                                    // html: '<a href="http://localhost:4200/ConfirmAccount/'+userSave._id+'">Confirmar Cuenta</a>',
-                                    };
-                                    console.log("----------")
-                                    console.log(msg)
-                                    console.log("----------")
-                                    sgMail.send(msg);
-                                    
+                                {                                      
+                                    emailVerification(userSave);                                    
+                                    createFavorites(userSave);
                                     res.status(200).send({message:"Porfavor verifica tu cuenta desde tu email",userSave,token: jwt.createTokenValidation(userSave)});                                     
                                 }
                             }
@@ -84,8 +70,26 @@ function saveUser(req,res)
         res.status(404).send({message:"faltan datos"});
     }
 }
-function validation(req,res)
+function emailVerification(userSave)
 {    
+    sgMail.setApiKey('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');
+    const msg = {
+                to: userSave.email,
+                from: 'pakogonzalezgil@gmail.com',
+                subject: 'Confirmacion de cuenta',
+                text: 'prueba 1.1 node y sendgrid',
+                html:'<div style="background-color: #fff; width: 100%;"><div style="text-align: center;"><h1 style="color:#4e85ae">Bienvenido '+userSave.name+' a Musify</h1></div><div style="width:40%; margin: auto;text-align: center;"><a href="http://localhost:4200/ConfirmAccount/'+userSave._id+'" style="color:white;font-size: 20px;text-decoration: none;"><div style="padding:20px;background:#4e85ae;border-radius: 10px">Confirmar Cuenta</div></a></div></div>'
+                };    
+    sgMail.send(msg);
+}
+function createFavorites(userSave)
+{
+    favoritos =new Favoritos();
+    favoritos.user=userSave._id;
+    favoritos.save().then(favoritesSave=>{}).catch(err=>{});
+}
+function validation(req,res)
+{      
     const userId=req.user.sub;    
     var update = {
         $set:{status: true}
@@ -103,15 +107,14 @@ function login(req,res)
 {    
     const params =req.body;    
     const email=params.email;
-    const password = params.password;
-        
+    const password = params.password;        
     User.findOne({email:email.toLowerCase()},(err, user)=>{
         if(err)
         {
             res.status(500).send({message:"Error en el Servidor"});
         }
         else
-        {
+        {            
             if(!user)
             {
                 res.status(404).send({message:"No existe el usuario"});
@@ -120,33 +123,103 @@ function login(req,res)
             {
                if(user.status==false)
                {
-                res.status(404).send({message:"Cuenta no verificada"});
+                res.status(403).send({message:"Cuenta no verificada"});
                }
                else{
-                bcrypt.compare(password,user.password,function(err,check){
-                    if(check)
-                    {                        
-                        if(params.gethash)
-                        {
-                            res.status(200).send({
-                                token: jwt.createToken(user)
-                            });                            
+                if(user.register=='google')
+                {
+                    res.status(500).send({message:"Esta cuenta esta registrada con google,Da click al boton de google"})
+                }
+                else
+                {
+                    bcrypt.compare(password,user.password,function(err,check){
+                        if(check)
+                        {                        
+                            if(params.gethash)
+                            {
+                                res.status(200).send({
+                                    token: jwt.createToken(user)
+                                });                            
+                            }
+                            else
+                            {
+                                res.status(200).send({user});
+                            }
                         }
                         else
                         {
-                            res.status(200).send({user});
+                            res.status(404).send({message: "Las contraseñas no son iguales"});
                         }
-                    }
-                    else
-                    {
-                        res.status(404).send({message: "Las contraseñas no son iguales"});
-                    }
-                });
+                    });
+                }
                }
             }
         }
     });
 }
+async function loginGoogle(req,res) {
+    var tokenG=req.body.token;    
+    let datosGoogle= await verify(tokenG).catch(
+        err=>{
+            res.status(403).send({message:"Token no validao"})
+        });    
+    User.find({email:datosGoogle.email}).then(
+        userSearch=>{            
+            if(userSearch=='')
+            {                
+                var user=new User();
+                user.name=datosGoogle.name;
+                user.email=datosGoogle.email;
+                user.role="ROLE_USER";
+                user.imagen="null";
+                user.status="1";
+                user.register='google'
+                user.save().then(
+                    userSav=>{
+                        createFavorites(userSav)
+                        userSave=[userSav];
+                        res.status(200).send({message:"Usuario de google almacenado",userSave,token: jwt.createToken(userSave)})
+                    }).catch(
+                    err=>{
+                        res.status(500).send({message:"Error en el servidor"})
+                    });
+            }
+            else
+            {                
+                if(userSearch[0].register=='musify')
+                {                    
+                    res.status(500).send({message:"Esta cuenta ya esta registrada,Inicia Sesion normal"})
+                }
+                else
+                {
+                    if(userSearch[0].register=='google')
+                    {
+                        console.log("google");
+                        var userSave=userSearch;
+                        res.status(200).send({
+                            userSave,token: jwt.createToken(userSearch)
+                        }); 
+                    }
+                }
+            }
+              
+        }).catch(
+        err=>{
+          
+            res.status(500).send({message:"Error en el servidor"})
+        });
+}
+async function verify(token) {    
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID
+    });
+    const payload = ticket.getPayload();    
+          return {
+              name:payload.name,
+              email:payload.email           
+            }
+  }  
 function updateUser(req,res)
 {      
     const userId= req.params.id;
@@ -224,7 +297,18 @@ function deleteUser(req,res)
         }
         else
         {
-            res.status(200).send({userDelete});
+            
+            Favoritos.find({user:userDelete._id}).remove(
+                (err,favoritosDelete)=>{
+                    if(err)
+                    {
+                        res.status(500).send({message:"Error en el servidor"});
+                    }
+                    else
+                    {
+                        !favoritosDelete ? res.status(404).send({message:"No se pudo eliminar la playlist"}) : res.status(200).send({userDelete});
+                    }      
+                })
         }
     }
  });
@@ -272,11 +356,11 @@ function getImagenUser(req,res)
     });
 }
 
-module.exports = {
-    pruebas,
+module.exports = {    
     saveUser,
     validation,
     login,
+    loginGoogle,
     updateUser,
     updatePassword,    
     deleteUser,
